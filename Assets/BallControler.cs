@@ -5,25 +5,33 @@ using UnityEngine;
 public class BallControler : MonoBehaviour
 {
 
-    public float speed = 0.01f;
+    public Rigidbody rb;
+    public float speed = 0.1f;
+    public float jump = 2f;
+    bool isGrounded;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     void Update()
     {
-        if(Input.GetKey(KeyCode.W))
+        transform.Translate(Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0, Input.GetAxis("Vertical") * speed * Time.deltaTime);
+        if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            transform.Translate(0, 0, speed * Time.deltaTime);
+            rb.AddForce(0, jump, 0);
+            
         }
-        if(Input.GetKey(KeyCode.S))
-        {
-            transform.Translate(0, 0, -speed * Time.deltaTime);
-        }
-        if(Input.GetKey(KeyCode.A))
-        {
-            transform.Translate(-speed * Time.deltaTime, 0, 0);
-        }
-        if(Input.GetKey(KeyCode.D))
-        {
-            transform.Translate(speed * Time.deltaTime, 0, 0);
-        }
+    }
+
+    public void OnCollisionEnter(Collision collision) 
+    {
+         isGrounded = true;
+    }
+
+    public void OnCollisionExit(Collision collision) 
+    {
+        isGrounded = false;    
     }
 }
